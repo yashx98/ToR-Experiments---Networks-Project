@@ -23,6 +23,9 @@ import statistics
 # 6. secureConnection seems to be needed to be established once and 0 time
 # required to establish secure connection.
 
+# benchmarking/popular_websites.txt contains the list of the top 50 popular
+# websites(excluding adult websites).
+
 ITERATIONS_PER_WEBPAGE = 20
 website = "http://google.com"
 timings = defaultdict(list)
