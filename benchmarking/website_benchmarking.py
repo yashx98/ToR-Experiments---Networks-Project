@@ -117,8 +117,21 @@ def initialiseWebDriver():
   driver =  webdriver.Chrome()
   return driver
 
-def calculatePerfWebsite(website):
-  driver = initialiseWebDriver()
+def initialiseTorWebDriver():
+  PROXY = "socks5://localhost:9150" # IP:PORT or HOST:PORT
+  options = webdriver.ChromeOptions()
+  options.add_argument('--proxy-server=%s' % PROXY)
+  driver = webdriver.Chrome(chrome_options=options)
+  return driver
+
+def getWebDriver(use_tor):
+  if use_tor:
+    return initialiseTorWebDriver()
+  else:
+    return initialiseWebDriver()
+
+def calculatePerfWebsite(website, use_tor = False):
+  driver = getWebDriver(use_tor)
   print(website)
   table = PrettyTable()
   table.field_names = [INDEX_NAME, BACKEND_PERF_NAME_CONST,
@@ -202,6 +215,7 @@ def main():
   websites_list = sanitizeWebsitesList(websites_list)
   for website in websites_list:
     calculatePerfWebsite(website)
+    calculatePerfWebsite(website, True)
 
 if __name__ == "__main__":
   main()
