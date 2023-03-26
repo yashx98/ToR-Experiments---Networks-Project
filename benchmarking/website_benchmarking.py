@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from collections import defaultdict
 from prettytable import PrettyTable
+import statistics
 
 # benchmarking/075-basic-website-performance-testing-backendperformance.png
 # contains the different phases of a request
@@ -22,7 +23,7 @@ from prettytable import PrettyTable
 # 6. secureConnection seems to be needed to be established once and 0 time
 # required to establish secure connection.
 
-ITERATIONS_PER_WEBPAGE = 5
+ITERATIONS_PER_WEBPAGE = 20
 website = "http://google.com"
 timings = defaultdict(list)
 WEBSITES_FILE_NAME = "popular_websites.txt"
@@ -36,6 +37,11 @@ TCP_HANDSHAKE_PERF_NAME_CONST = "TCP Handshake Time(ms)"
 TCP_HANDSHAKE_PERF_CONST = "tcp_handshake"
 RESPONSE_PERF_NAME_CONST = "Server Response Time(ms)"
 RESPONSE_PERF_CONST = "response"
+STAT_NAME_STR = "Stat Name"
+MEAN_STR = "Mean"
+MEADIAN_STR = "Median"
+STD_DEV_STR = "Standard Deviation"
+COF_VAR_STR = "Coefficient of Variation"
 
 def perfMeasure(driver, website):
   driver.get(website)
@@ -118,19 +124,53 @@ def calculatePerfWebsite(website):
   table.field_names = [INDEX_NAME, BACKEND_PERF_NAME_CONST,
                        FRONTEND_PERF_NAME_CONST, TCP_HANDSHAKE_PERF_NAME_CONST,
                        RESPONSE_PERF_NAME_CONST]
-  # out_str = ""
+  # TODO(Yash): Add stats stat for the measurements
+  stats_table = PrettyTable()
+  stats_table.field_names = [STAT_NAME_STR, BACKEND_PERF_NAME_CONST,
+                             FRONTEND_PERF_NAME_CONST,
+                             TCP_HANDSHAKE_PERF_NAME_CONST,
+                             RESPONSE_PERF_NAME_CONST]
+  # stats_table.field_names = [STAT_NAME_STR, MEAN_STR]
+  allStatsArr = []
+  columnsArr = [BACKEND_PERF_CONST, FRONTEND_PERF_CONST,
+                TCP_HANDSHAKE_PERF_CONST, RESPONSE_PERF_CONST]
   for i in range(ITERATIONS_PER_WEBPAGE):
     perfDict = perfMeasure(driver, website)
     table.add_row([i, perfDict[BACKEND_PERF_CONST],
                    perfDict[FRONTEND_PERF_CONST],
                    perfDict[TCP_HANDSHAKE_PERF_CONST],
                    perfDict[RESPONSE_PERF_CONST]])
-    # out_str = str(i) + " "
-    # out_str += perfOutput(perfDict)
-    # print(out_str)
+    allStatsArr.append(perfDict)
   driver.quit()
+  stats_dict = defaultdict(list)
+  for perfDict in allStatsArr:
+    for col in columnsArr:
+      if perfDict[col] >= 0:
+        stats_dict[col].append(perfDict[col])
+  mean_row = []
+  mean_row.append(MEAN_STR)
+  std_dev_row = []
+  std_dev_row.append(STD_DEV_STR)
+  median_row = []
+  median_row.append(MEADIAN_STR)
+  cof_var_row = []
+  cof_var_row.append(COF_VAR_STR)
+  for col in columnsArr:
+    mean = statistics.mean(stats_dict[col])
+    std_dev = statistics.stdev(stats_dict[col])
+    mean_row.append(mean)
+    median_row.append(statistics.median(stats_dict[col]))
+    std_dev_row.append(std_dev)
+    if mean == 0:
+      cof_var_row.append(0)
+    else:
+      cof_var_row.append(std_dev * 100 / mean)
+  stats_table.add_row(mean_row)
+  stats_table.add_row(median_row)
+  stats_table.add_row(std_dev_row)
+  stats_table.add_row(cof_var_row)
   print(table)
-  # printTimingsDebug()
+  print(stats_table)
 
 def perfOutput(perfDict):
   out_str = ""
