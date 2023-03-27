@@ -31,6 +31,7 @@ website = "http://google.com"
 timings = defaultdict(list)
 WEBSITES_FILE_NAME = "popular_websites.txt"
 HTTP_STR = "http://"
+HTTPS_STR = "https://"
 INDEX_NAME = "Index No."
 BACKEND_PERF_NAME_CONST = "Backend Time(ms)"
 BACKEND_PERF_CONST = "backend"
@@ -210,6 +211,11 @@ def readPopularWebsites():
 def sanitizeWebsitesList(websites_list):
   websites_list_sanitized = []
   for website in websites_list:
+    if website[0] == '#':
+      continue
+    if website[0] == '@':
+      websites_list_sanitized.append(HTTPS_STR + website[1:])
+      continue
     websites_list_sanitized.append(HTTP_STR + website)
   return websites_list_sanitized
 
