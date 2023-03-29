@@ -4,20 +4,22 @@ import time
 from io import StringIO
 import requests
 import random
+import statistics
 
 SOCKS_PORT = 9150
 CONTROL_PORT = 9151
 CONNECTION_TIMEOUT = 30  # timeout before we give up on a circuit
 # EXIT_FINGERPRINT = '379FB450010D17078B3766C2273303C358C3A442'
 EXIT_FINGERPRINT = 'EF25C1F9BEF8C4A3F2859493C7C8C5148725B4E7'
+NUM_CIRCUITS_SETUP = 100
 
 def renewConnection():
-    with Controller.from_port(port = 9051) as controller:
+    with Controller.from_port(port = CONTROL_PORT) as controller:
         controller.authenticate(password="")
         controller.signal(Signal.NEWNYM)
 
 def circuitBuildTime():
-  with Controller.from_port(port = 9051) as controller:
+  with Controller.from_port(port = CONTROL_PORT) as controller:
       controller.authenticate()
 
       # Build a new circuit and note the start time
@@ -35,6 +37,7 @@ def circuitBuildTime():
       # Calculate the circuit build time
       circuit_build_time = end_time - start_time
       print("Circuit build time: %.3f seconds" % circuit_build_time)
+      return circuit_build_time
 
 def get(url):
   """
@@ -88,7 +91,7 @@ def twoHopTry():
         print('%s => %s' % (fingerprint, exc))
 
 def listCircuits():
-  with Controller.from_port(port = 9051) as controller:
+  with Controller.from_port(port = CONTROL_PORT) as controller:
     controller.authenticate()
 
     for circ in sorted(controller.get_circuits()):
@@ -107,6 +110,36 @@ def listCircuits():
 
         print(" %s- %s (%s, %s)" % (div, fingerprint, nickname, address))
 
+def calCircuitSetupTimes():
+  listCircuits()
+  cir_build_times = []
+  num_tries = 0
+  i = 0
+  while i < NUM_CIRCUITS_SETUP:
+    num_tries += 1
+    try:
+      cir_build_time = circuitBuildTime()
+    except:
+       continue
+    i += 1
+    print(cir_build_time)
+    cir_build_times.append(cir_build_time)
+  mean_time = statistics.mean(cir_build_times)
+  mean_time = statistics.mean(cir_build_times)
+  std_dev_time = statistics.stdev(cir_build_times)
+  print('Num values %s' % len(cir_build_times))
+  print('Num tries %s' % num_tries)
+  circuit_build_success_rate = (NUM_CIRCUITS_SETUP * 100.0) / num_tries
+  print('Circuit build success rate %s' % circuit_build_success_rate)
+  print('Mean Circuit Build Time: %s ms' % mean_time)
+  print('Median Circuit Build Time: %s ms' % statistics.median(cir_build_times))
+  print('Std dev Circuit Build Time: %s ms' % std_dev_time)
+  coef_var = 0
+  if mean_time != 0:
+    coef_var = std_dev_time * 100 / mean_time
+  print('Coefficient of variation Circuit Build Time: %s ms' % coef_var)
+
+calCircuitSetupTimes()
 # listCircuits()
 
 # twoHopTry()
