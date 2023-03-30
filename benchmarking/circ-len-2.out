@@ -1,207 +1,227 @@
-Circuit build time: 0.304 seconds
-0.30449795722961426
-Circuit build time: 0.222 seconds
-0.22200894355773926
-Circuit build time: 0.255 seconds
-0.2546377182006836
-Circuit build time: 0.228 seconds
-0.2277371883392334
-Circuit build time: 0.298 seconds
-0.2978060245513916
-Circuit build time: 0.150 seconds
-0.1497809886932373
+
+Circuit 1 (GENERAL)
+ |- C5B8FBC0237F4A04F2055128F257DFF6E9C145B7 (Doedelkiste23, 89.163.128.25)
+ +- 8E1CB2E2467989A9369284E09669AD0FD691075E (4716, 185.243.218.61)
+
+Circuit 2 (GENERAL)
+ |- 3569861596896FACD8860FF638AE8959105A86C8 (yellowjackets, 104.217.249.58)
+ +- AF8DB275960279B87F098B16CC9C78092E118DB3 (NLfreedom1, 103.251.167.10)
+
+Circuit 3 (HS_VANGUARDS)
+ |- 3569861596896FACD8860FF638AE8959105A86C8 (yellowjackets, 104.217.249.58)
+ +- 234D670EAA794F092F7BD758D5D2AA7F4E3FFBE3 (Ceres, 45.13.104.185)
+
+Circuit 4 (HS_VANGUARDS)
+ |- C5B8FBC0237F4A04F2055128F257DFF6E9C145B7 (Doedelkiste23, 89.163.128.25)
+ +- 43028D0071DE055180DAA82DE200B42FD2131C23 (ForPrivacyNET, 185.220.101.209)
+
+Circuit 5 (HS_VANGUARDS)
+ |- 3569861596896FACD8860FF638AE8959105A86C8 (yellowjackets, 104.217.249.58)
+ +- F471CB00007972DC2DC748DD5785C005A4EAAD71 (privacymiddle, 89.58.12.249)
+Circuit build time: 0.937 seconds
+0.9366252422332764
 Circuit build time: 0.236 seconds
-0.23566985130310059
-Circuit build time: 0.308 seconds
-0.30840349197387695
-Circuit build time: 0.302 seconds
-0.30174779891967773
-Circuit build time: 0.307 seconds
-0.3067038059234619
-Circuit build time: 0.298 seconds
-0.2980649471282959
-Circuit build time: 0.312 seconds
-0.3121757507324219
-Circuit build time: 0.312 seconds
-0.3118715286254883
-Circuit build time: 0.224 seconds
-0.22390365600585938
-Circuit build time: 0.413 seconds
-0.41273069381713867
-Circuit build time: 0.316 seconds
-0.31618618965148926
-Circuit build time: 1.212 seconds
-1.2120540142059326
-Circuit build time: 0.361 seconds
-0.3607184886932373
-Circuit build time: 0.273 seconds
-0.273195743560791
-Circuit build time: 0.317 seconds
-0.3169410228729248
-Circuit build time: 0.317 seconds
-0.31661224365234375
-Circuit build time: 0.273 seconds
-0.2732369899749756
-Circuit build time: 0.317 seconds
-0.3168156147003174
-Circuit build time: 0.637 seconds
-0.6370449066162109
-Circuit build time: 0.359 seconds
-0.35928964614868164
-Circuit build time: 0.277 seconds
-0.2772986888885498
-Circuit build time: 0.365 seconds
-0.3649744987487793
-Circuit build time: 0.277 seconds
-0.2773098945617676
-Circuit build time: 0.277 seconds
-0.2768666744232178
-Circuit build time: 0.411 seconds
-0.41100120544433594
-Circuit build time: 0.321 seconds
-0.32134461402893066
-Circuit build time: 0.329 seconds
-0.32892942428588867
-Circuit build time: 0.321 seconds
-0.32117581367492676
-Circuit build time: 0.422 seconds
-0.42190003395080566
-Circuit build time: 0.311 seconds
-0.3112680912017822
-Circuit build time: 0.422 seconds
-0.4221622943878174
-Circuit build time: 0.273 seconds
-0.27278614044189453
+0.2357473373413086
 Circuit build time: 0.239 seconds
-0.2393205165863037
+0.23914766311645508
+Circuit build time: 0.299 seconds
+0.29931187629699707
+Circuit build time: 0.226 seconds
+0.2261824607849121
+Circuit build time: 0.233 seconds
+0.23260736465454102
+Circuit build time: 0.230 seconds
+0.23012232780456543
+Circuit build time: 0.298 seconds
+0.2975192070007324
 Circuit build time: 0.313 seconds
-0.3129088878631592
-Circuit build time: 0.419 seconds
-0.4193134307861328
-Circuit build time: 0.344 seconds
-0.3440377712249756
-Circuit build time: 0.240 seconds
-0.23970770835876465
-Circuit build time: 0.241 seconds
-0.24137067794799805
-Circuit build time: 0.357 seconds
-0.3574671745300293
-Circuit build time: 0.256 seconds
-0.25632596015930176
-Circuit build time: 0.867 seconds
-0.8668854236602783
-Circuit build time: 0.473 seconds
-0.47295331954956055
-Circuit build time: 0.246 seconds
-0.24550509452819824
-Circuit build time: 0.261 seconds
-0.26112914085388184
-Circuit build time: 0.391 seconds
-0.3905491828918457
-Circuit build time: 0.312 seconds
-0.3115706443786621
-Circuit build time: 0.257 seconds
-0.25675201416015625
-Circuit build time: 0.242 seconds
-0.24184298515319824
-Circuit build time: 0.304 seconds
-0.30393385887145996
-Circuit build time: 0.244 seconds
-0.24404644966125488
-Circuit build time: 0.227 seconds
-0.2271134853363037
-Circuit build time: 0.274 seconds
-0.273820161819458
-Circuit build time: 0.345 seconds
-0.34542131423950195
-Circuit build time: 0.301 seconds
-0.3012394905090332
-Circuit build time: 0.258 seconds
-0.25777101516723633
-Circuit build time: 0.314 seconds
-0.31366944313049316
-Circuit build time: 0.236 seconds
-0.2360081672668457
-Circuit build time: 0.347 seconds
-0.3473551273345947
-Circuit build time: 0.273 seconds
-0.27276062965393066
-Circuit build time: 0.336 seconds
-0.33617186546325684
-Circuit build time: 0.254 seconds
-0.2536022663116455
-Circuit build time: 0.229 seconds
-0.22930192947387695
-Circuit build time: 0.311 seconds
-0.31114935874938965
-Circuit build time: 0.260 seconds
-0.260272741317749
-Circuit build time: 0.244 seconds
-0.24361515045166016
-Circuit build time: 0.599 seconds
-0.5993220806121826
-Circuit build time: 0.256 seconds
-0.2557394504547119
+0.31313037872314453
 Circuit build time: 0.307 seconds
-0.30652928352355957
-Circuit build time: 0.309 seconds
-0.3090240955352783
-Circuit build time: 0.351 seconds
-0.350848913192749
-Circuit build time: 0.238 seconds
-0.23846888542175293
-Circuit build time: 0.290 seconds
-0.2898573875427246
-Circuit build time: 0.318 seconds
-0.31752920150756836
-Circuit build time: 0.229 seconds
-0.2294633388519287
-Circuit build time: 0.148 seconds
-0.14835023880004883
-Circuit build time: 0.225 seconds
-0.2250657081604004
-Circuit build time: 0.223 seconds
-0.22319769859313965
-Circuit build time: 0.258 seconds
-0.25805115699768066
-Circuit build time: 0.247 seconds
-0.2474977970123291
-Circuit build time: 0.241 seconds
-0.24071836471557617
-Circuit build time: 0.332 seconds
-0.33203625679016113
-Circuit build time: 0.308 seconds
-0.3082847595214844
-Circuit build time: 0.231 seconds
-0.2309398651123047
-Circuit build time: 0.420 seconds
-0.4203009605407715
-Circuit build time: 0.288 seconds
-0.28765153884887695
-Circuit build time: 0.242 seconds
-0.24243760108947754
-Circuit build time: 0.261 seconds
-0.26104044914245605
+0.3072183132171631
+Circuit build time: 0.284 seconds
+0.2842586040496826
+Circuit build time: 0.410 seconds
+0.40960121154785156
+Circuit build time: 0.387 seconds
+0.3868849277496338
+Circuit build time: 0.465 seconds
+0.4649655818939209
 Circuit build time: 0.319 seconds
-0.3188786506652832
-Circuit build time: 0.240 seconds
-0.2396080493927002
-Circuit build time: 0.327 seconds
-0.32671689987182617
-Circuit build time: 0.156 seconds
-0.15551495552062988
+0.31861305236816406
+Circuit build time: 0.362 seconds
+0.3624234199523926
+Circuit build time: 0.317 seconds
+0.3166220188140869
+Circuit build time: 0.361 seconds
+0.36086058616638184
+Circuit build time: 0.184 seconds
+0.18359088897705078
+Circuit build time: 0.496 seconds
+0.49613285064697266
+Circuit build time: 0.493 seconds
+0.49289822578430176
+Circuit build time: 0.361 seconds
+0.36066651344299316
+Circuit build time: 0.317 seconds
+0.3171813488006592
+Circuit build time: 0.276 seconds
+0.2757890224456787
+Circuit build time: 0.317 seconds
+0.31735730171203613
+Circuit build time: 0.412 seconds
+0.4122459888458252
+Circuit build time: 0.369 seconds
+0.36858534812927246
+Circuit build time: 0.273 seconds
+0.27289605140686035
+Circuit build time: 0.365 seconds
+0.3645658493041992
+Circuit build time: 0.947 seconds
+0.9474740028381348
+Circuit build time: 0.277 seconds
+0.27678728103637695
 Circuit build time: 0.281 seconds
-0.28135228157043457
-Circuit build time: 0.279 seconds
-0.2789590358734131
-Circuit build time: 0.310 seconds
-0.30998682975769043
-Circuit build time: 0.255 seconds
-0.2549896240234375
+0.2805807590484619
+Circuit build time: 0.323 seconds
+0.32321786880493164
+Circuit build time: 0.278 seconds
+0.2782018184661865
+Circuit build time: 0.305 seconds
+0.3052501678466797
+Circuit build time: 0.228 seconds
+0.22768092155456543
+Circuit build time: 0.184 seconds
+0.18406105041503906
+Circuit build time: 0.238 seconds
+0.23769807815551758
+Circuit build time: 0.240 seconds
+0.23966097831726074
+Circuit build time: 0.243 seconds
+0.24306297302246094
+Circuit build time: 0.892 seconds
+0.8923234939575195
+Circuit build time: 0.235 seconds
+0.23460912704467773
+Circuit build time: 0.322 seconds
+0.32207798957824707
+Circuit build time: 0.377 seconds
+0.37733983993530273
+Circuit build time: 0.266 seconds
+0.2663767337799072
+Circuit build time: 0.318 seconds
+0.31849169731140137
+Circuit build time: 0.362 seconds
+0.361830472946167
+Circuit build time: 0.273 seconds
+0.27254366874694824
+Circuit build time: 0.346 seconds
+0.3455078601837158
+Circuit build time: 0.302 seconds
+0.3018465042114258
+Circuit build time: 0.247 seconds
+0.24748587608337402
+Circuit build time: 0.416 seconds
+0.41600966453552246
+Circuit build time: 0.249 seconds
+0.24901556968688965
+Circuit build time: 0.308 seconds
+0.30780506134033203
+Circuit build time: 0.339 seconds
+0.33916163444519043
+Circuit build time: 0.353 seconds
+0.3532369136810303
+Circuit build time: 0.118 seconds
+0.11826896667480469
+Circuit build time: 0.311 seconds
+0.3109104633331299
+Circuit build time: 0.267 seconds
+0.2674400806427002
+Circuit build time: 0.306 seconds
+0.30553150177001953
+Circuit build time: 0.251 seconds
+0.2511563301086426
+Circuit build time: 0.306 seconds
+0.30632925033569336
+Circuit build time: 0.239 seconds
+0.23926591873168945
+Circuit build time: 0.150 seconds
+0.15024161338806152
+Circuit build time: 0.236 seconds
+0.23608064651489258
+Circuit build time: 0.234 seconds
+0.2336435317993164
+Circuit build time: 0.227 seconds
+0.22698974609375
+Circuit build time: 0.248 seconds
+0.24779534339904785
+Circuit build time: 0.460 seconds
+0.45984435081481934
+Circuit build time: 0.379 seconds
+0.37943029403686523
+Circuit build time: 0.233 seconds
+0.23342490196228027
+Circuit build time: 0.300 seconds
+0.30034589767456055
+Circuit build time: 0.254 seconds
+0.25401973724365234
+Circuit build time: 0.317 seconds
+0.31658101081848145
+Circuit build time: 0.241 seconds
+0.24138617515563965
+Circuit build time: 0.334 seconds
+0.3337442874908447
+Circuit build time: 0.249 seconds
+0.24918818473815918
+Circuit build time: 0.407 seconds
+0.40671253204345703
+Circuit build time: 0.239 seconds
+0.23898530006408691
+Circuit build time: 0.250 seconds
+0.2497267723083496
+Circuit build time: 0.709 seconds
+0.7090380191802979
+Circuit build time: 0.305 seconds
+0.30496811866760254
+Circuit build time: 0.245 seconds
+0.24472713470458984
+Circuit build time: 0.247 seconds
+0.2471301555633545
+Circuit build time: 0.382 seconds
+0.38211703300476074
+Circuit build time: 0.262 seconds
+0.26204347610473633
+Circuit build time: 0.227 seconds
+0.22651457786560059
+Circuit build time: 0.352 seconds
+0.3520236015319824
+Circuit build time: 0.284 seconds
+0.2838258743286133
+Circuit build time: 0.318 seconds
+0.3177299499511719
+Circuit build time: 0.224 seconds
+0.22448277473449707
+Circuit build time: 0.313 seconds
+0.312924861907959
+Circuit build time: 0.247 seconds
+0.24726605415344238
+Circuit build time: 0.322 seconds
+0.3215341567993164
+Circuit build time: 0.157 seconds
+0.15706562995910645
+Circuit build time: 0.314 seconds
+0.31366729736328125
+Circuit build time: 0.272 seconds
+0.27187037467956543
+Circuit build time: 0.158 seconds
+0.15774059295654297
+Circuit build time: 0.335 seconds
+0.3345961570739746
+Circuit build time: 0.326 seconds
+0.32610464096069336
 Num values 100
-Num tries 108
-Circuit build success rate 92.5925925925926
-Mean Circuit Build Time: 0.31260106325149534 ms
-Median Circuit Build Time: 0.29793548583984375 ms
-Std dev Circuit Build Time: 0.13041731638044418 ms
-Coefficient of variation Circuit Build Time: 41.72004887760737 ms
+Num tries 101
+Circuit build success rate 99.00990099009901
+Mean Circuit Build Time: 0.3178750228881836 ms
+Median Circuit Build Time: 0.30109620094299316 ms
+Std dev Circuit Build Time: 0.1347233190395605 ms
+Coefficient of variation Circuit Build Time: 42.38248032685193 ms
