@@ -1,0 +1,47 @@
+# '#' is used for adding comments in this file
+# '@' is used if https:// needs to e used for accessing a website
+google.com
+youtube.com
+facebook.com
+twitter.com
+instagram.com
+#baidu.com
+wikipedia.com
+yandex.ru
+yahoo.com
+whatsapp.com
+amazon.com
+live.com
+yahoo.co.jp
+tiktok.com
+#docomo.ne.jp
+linkedin.com
+reddit.com
+office.com
+netflix.com
+dzen.ru
+samsung.com
+vk.com
+#microsoftonline.com
+bing.com
+naver.com
+mail.ru
+openai.com
+twitch.tv
+@turbopages.org
+discord.com
+pinterest.com
+weather.com
+bilibili.com
+zoom.us
+microsoft.com
+duckduckgo.com
+qq.com
+roblox.com
+msn.com
+quora.com
+fandom.com
+globo.com
+ebay.com
+# For some reason below website cannot be accessed on the server error.
+#aajtak.in

@@ -26,7 +26,7 @@ import statistics
 # benchmarking/popular_websites.txt contains the list of the top 50 popular
 # websites(excluding adult websites).
 
-ITERATIONS_PER_WEBPAGE = 20
+ITERATIONS_PER_WEBPAGE = 2
 website = "http://google.com"
 timings = defaultdict(list)
 WEBSITES_FILE_NAME = "popular_websites.txt"
@@ -46,6 +46,7 @@ MEAN_STR = "Mean"
 MEADIAN_STR = "Median"
 STD_DEV_STR = "Standard Deviation"
 COF_VAR_STR = "Coefficient of Variation"
+DATA_DOWNLOADED_STR = "data_downloaded"
 
 def perfMeasure(driver, website):
   driver.get(website)
@@ -75,11 +76,16 @@ def perfMeasure(driver, website):
   # print("Front End: %s ms" % frontendPerformance_calc)
   # print("Tcp Handshake: %s ms" % (connectEnd - connectStart))
   # print("response time: %s ms" % (responseEnd - requestStart))
+  # network_data = driver.execute_script('return window.performance.getEntries();')
+  # total_data_size = sum(entry['transferSize'] for entry in network_data if entry['transferSize'] > 0)
+  size_in_bytes = driver.execute_script("return window.performance.getEntries().reduce((total, entry) => total + entry.transferSize, 0)")
   perfDict = {}
   perfDict[BACKEND_PERF_CONST] = backendPerformance_calc
   perfDict[FRONTEND_PERF_CONST] = frontendPerformance_calc
   perfDict[TCP_HANDSHAKE_PERF_CONST] = (connectEnd - connectStart)
   perfDict[RESPONSE_PERF_CONST] = (responseEnd - requestStart)
+  # perfDict[DATA_DOWNLOADED_STR] = size_in_bytes
+  # print("Data down %s" % size_in_bytes)
   return perfDict
   # print("Time to fetch: %s ms" % (responseEnd - fetchStart))
   # print("Navigantion Start: %s ms" % navigationStart)
@@ -118,13 +124,17 @@ def initialiseWebDriver():
   # chrome_options = webdriver.ChromeOptions()
   # chrome_options.add_argument("--incognito")
   # driver =  webdriver.Chrome(chrome_options=chrome_options)
-  driver =  webdriver.Chrome()
+  # driver =  webdriver.Chrome()
+  options = webdriver.ChromeOptions()
+  options.add_argument('--headless')
+  driver = webdriver.Chrome(chrome_options=options)
   return driver
 
 def initialiseTorWebDriver():
-  PROXY = "socks5://localhost:9150" # IP:PORT or HOST:PORT
+  PROXY = "socks5://localhost:9050" # IP:PORT or HOST:PORT
   options = webdriver.ChromeOptions()
   options.add_argument('--proxy-server=%s' % PROXY)
+  options.add_argument('--headless')
   driver = webdriver.Chrome(chrome_options=options)
   return driver
 
@@ -223,8 +233,9 @@ def main():
   websites_list = readPopularWebsites()
   websites_list = sanitizeWebsitesList(websites_list)
   for website in websites_list:
-    calculatePerfWebsite(website)
+    # calculatePerfWebsite(website)
     calculatePerfWebsite(website, True)
 
 if __name__ == "__main__":
   main()
+  # driver = getWebDriver(True)

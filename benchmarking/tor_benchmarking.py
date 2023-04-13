@@ -139,6 +139,23 @@ def calCircuitSetupTimes():
     coef_var = std_dev_time * 100 / mean_time
   print('Coefficient of variation Circuit Build Time: %s ms' % coef_var)
 
+def latencyCheck():
+  # print(get('http://google.com'))
+  session = requests.session()
+  session.proxies = {
+    'http': 'socks5://127.0.0.1:%s' % SOCKS_PORT,
+    'https': 'socks5://127.0.0.1:%s' % SOCKS_PORT,
+  }
+  response = session.head('http://youtube.com')
+  print(response)
+  if response.status_code == 200:
+     print(response.elapsed)
+  else:
+     print(response.elapsed)
+     print("Did not return 200")
+
+# latencyCheck()
+
 calCircuitSetupTimes()
 # listCircuits()
 
