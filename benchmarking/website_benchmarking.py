@@ -3,6 +3,12 @@ from selenium.webdriver.common.keys import Keys
 from collections import defaultdict
 from prettytable import PrettyTable
 import statistics
+import subprocess
+import os
+import time
+import signal
+from stem import Signal, CircStatus
+from stem.control import Controller, EventType
 
 # benchmarking/075-basic-website-performance-testing-backendperformance.png
 # contains the different phases of a request
@@ -47,6 +53,9 @@ MEADIAN_STR = "Median"
 STD_DEV_STR = "Standard Deviation"
 COF_VAR_STR = "Coefficient of Variation"
 DATA_DOWNLOADED_STR = "data_downloaded"
+MAX_NUM_HOPS = 2
+SOCKS_PORT = 9200
+CONTROL_PORT = 9201
 
 def perfMeasure(driver, website):
   driver.get(website)
@@ -131,7 +140,7 @@ def initialiseWebDriver():
   return driver
 
 def initialiseTorWebDriver():
-  PROXY = "socks5://localhost:9050" # IP:PORT or HOST:PORT
+  PROXY = "socks5://localhost:" + str(SOCKS_PORT) # IP:PORT or HOST:PORT
   options = webdriver.ChromeOptions()
   options.add_argument('--proxy-server=%s' % PROXY)
   options.add_argument('--headless')
@@ -229,13 +238,55 @@ def sanitizeWebsitesList(websites_list):
     websites_list_sanitized.append(HTTP_STR + website)
   return websites_list_sanitized
 
+def remakeTorWithChangedHops(num_hops):
+  cmd_str = "sed -i '902s/.*/#define DEFAULT_ROUTE_LEN "+ str(num_hops) +"/' src/core/or/or.h"
+  subprocess.run(cmd_str, cwd="/users/ys5608/code/tor/", shell=True)
+  print("Uninstalling tor")
+  subprocess.run("sudo make uninstall", cwd="/users/ys5608/code/tor/", shell=True)
+  print("Reinstalling tor with " + str(num_hops) + " hops.")
+  subprocess.run("sudo make install", cwd="/users/ys5608/code/tor/", shell=True)
+  print("Starting tor with hops=" + str(num_hops))
+  tor_process = subprocess.Popen("exec tor --controlport 9201", cwd="/users/ys5608/code/tor/", shell=True)
+  time.sleep(20)
+  return tor_process
+
+def listCircuits():
+  with Controller.from_port(port = CONTROL_PORT) as controller:
+    controller.authenticate()
+
+    for circ in sorted(controller.get_circuits()):
+      if circ.status != CircStatus.BUILT:
+        continue
+
+      print("")
+      print("Circuit %s (%s)" % (circ.id, circ.purpose))
+
+      for i, entry in enumerate(circ.path):
+        div = '+' if (i == len(circ.path) - 1) else '|'
+        fingerprint, nickname = entry
+
+        desc = controller.get_network_status(fingerprint, None)
+        address = desc.address if desc else 'unknown'
+
+        print(" %s- %s (%s, %s)" % (div, fingerprint, nickname, address))
+
 def main():
   websites_list = readPopularWebsites()
   websites_list = sanitizeWebsitesList(websites_list)
-  for website in websites_list:
-    # calculatePerfWebsite(website)
-    calculatePerfWebsite(website, True)
+  for i in range(1, MAX_NUM_HOPS + 1):
+    tor_process = None
+    if i != 1:
+      tor_process = remakeTorWithChangedHops(i)
+      listCircuits()
+    for website in websites_list:
+      if i == 1:
+        calculatePerfWebsite(website)
+        continue
+      calculatePerfWebsite(website, True)
+    if i != 1:
+      tor_process.send_signal(signal.SIGINT)
 
 if __name__ == "__main__":
   main()
+  # listCircuits()
   # driver = getWebDriver(True)
