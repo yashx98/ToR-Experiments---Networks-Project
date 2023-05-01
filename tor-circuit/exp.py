@@ -10,6 +10,10 @@ from io import StringIO
 import requests
 import random
 import statistics
+import subprocess
+import os
+import signal
+import time
 
 SOCKS_PORT = 9200
 CONTROL_PORT = 9201
@@ -110,15 +114,15 @@ def expNew():
   controller = stem.control.Controller.from_port(port = CONTROL_PORT)
   controller.authenticate()
   # circuit = controller.new_circuit(["Onyx", "TorRelayPoland", "krustykrab", "FatTubes", "d2d4"])
-  circuit = controller.new_circuit(["d2d4"])
+  circuit = controller.new_circuit(["Onyx", "TorRelayPoland", "d2d4"])
   # circuit = controller.new_circuit()
   # circuit = controller.new_circuit(["Onyx","d2d4"])
-  for circ in sorted(controller.get_circuits()):
-    if circ.status != CircStatus.BUILT:
-      continue
-    if (len(circ.path) == 1):
-      continue
-    controller.close_circuit(circ.id)
+  # for circ in sorted(controller.get_circuits()):
+  #   if circ.status != CircStatus.BUILT:
+  #     continue
+  #   if (len(circ.path) == 1):
+  #     continue
+  #   controller.close_circuit(circ.id)
   # circuit.open_stream("www.google.com")
   # response = circuit.read()
   # controller.add_nodes(["Onyx", "TorRelayPoland", "d2d4"])
@@ -154,9 +158,44 @@ def listStuff():
   # exit_nodes = controller.get_info("ns/all-exit-ports")
   # print(exit_nodes)
 
+def closeAllBuiltCircuits(controller):
+  for circ in sorted(controller.get_circuits()):
+    if circ.status != CircStatus.BUILT:
+      continue
+    if (len(circ.path) == 1):
+      continue
+    controller.close_circuit(circ.id)
+
+def getNodesForCountry(control_port, country):
+  controller = stem.control.Controller.from_port(port = control_port)
+  controller.authenticate()
+  
+def createNewDefaultCircuit():
+  controller = stem.control.Controller.from_port(port = CONTROL_PORT)
+  controller.authenticate()
+  controller.signal(Signal.NEWNYM)
+
+def remakeTor(num_hops):
+  cmd_str = "sed -i '902s/.*/#define DEFAULT_ROUTE_LEN "+ str(num_hops) +"/' src/core/or/or.h"
+  subprocess.run(cmd_str, cwd="/users/ys5608/code/tor/", shell=True)
+  subprocess.run("sudo make uninstall", cwd="/users/ys5608/code/tor/", shell=True)
+  subprocess.run("sudo make install", cwd="/users/ys5608/code/tor/", shell=True)
+  tor_process = subprocess.Popen("exec tor --controlport 9201", cwd="/users/ys5608/code/tor/", shell=True)
+  time.sleep(10)
+  return tor_process
+
 # startNew()
+# createNewDefaultCircuit()
 # listCircuits()
 # get("www.google.com")
 # latencyCheck()
 # expNew()
-listStuff()
+# listStuff()
+process = remakeTor(2)
+print("Here")
+print(process.pid)
+# process.kill()
+listCircuits()
+process.send_signal(signal.SIGINT)
+print("Hoho")
+# os.killpg(os.getpgid(process.pid), signal.SIGINT)
