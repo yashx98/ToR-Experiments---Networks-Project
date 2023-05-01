@@ -9,6 +9,7 @@ import time
 import signal
 from stem import Signal, CircStatus
 from stem.control import Controller, EventType
+import matplotlib.pyplot as plt
 
 # benchmarking/075-basic-website-performance-testing-backendperformance.png
 # contains the different phases of a request
@@ -40,13 +41,13 @@ HTTP_STR = "http://"
 HTTPS_STR = "https://"
 INDEX_NAME = "Index No."
 BACKEND_PERF_NAME_CONST = "Backend Time(ms)"
-BACKEND_PERF_CONST = "backend"
+BACKEND_PERF_CONST = "Backend"
 FRONTEND_PERF_NAME_CONST = "Frontend Time(ms)"
-FRONTEND_PERF_CONST = "frontend"
+FRONTEND_PERF_CONST = "Frontend"
 TCP_HANDSHAKE_PERF_NAME_CONST = "TCP Handshake Time(ms)"
 TCP_HANDSHAKE_PERF_CONST = "tcp_handshake"
 RESPONSE_PERF_NAME_CONST = "Server Response Time(ms)"
-RESPONSE_PERF_CONST = "response"
+RESPONSE_PERF_CONST = "Response"
 STAT_NAME_STR = "Stat Name"
 MEAN_STR = "Mean"
 MEADIAN_STR = "Median"
@@ -191,22 +192,32 @@ def calculatePerfWebsite(website, use_tor = False):
   median_row.append(MEADIAN_STR)
   cof_var_row = []
   cof_var_row.append(COF_VAR_STR)
+  website_stats_dict = {}
   for col in columnsArr:
     mean = statistics.mean(stats_dict[col])
     std_dev = statistics.stdev(stats_dict[col])
     mean_row.append(mean)
-    median_row.append(statistics.median(stats_dict[col]))
+    median = statistics.median(stats_dict[col])
+    median_row.append(median)
     std_dev_row.append(std_dev)
+    collected_stats_dict = {}
+    collected_stats_dict[MEAN_STR] = mean
+    collected_stats_dict[MEADIAN_STR] = median
+    collected_stats_dict[STD_DEV_STR] = std_dev
     if mean == 0:
       cof_var_row.append(0)
+      collected_stats_dict[COF_VAR_STR] = 0
     else:
       cof_var_row.append(std_dev * 100 / mean)
+      collected_stats_dict[COF_VAR_STR] = std_dev * 100 / mean
+    website_stats_dict[col] = collected_stats_dict
   stats_table.add_row(mean_row)
   stats_table.add_row(median_row)
   stats_table.add_row(std_dev_row)
   stats_table.add_row(cof_var_row)
   print(table)
   print(stats_table)
+  return website_stats_dict
 
 def perfOutput(perfDict):
   out_str = ""
@@ -273,18 +284,63 @@ def listCircuits():
 def main():
   websites_list = readPopularWebsites()
   websites_list = sanitizeWebsitesList(websites_list)
+  websites_stats_list = []
   for i in range(1, MAX_NUM_HOPS + 1):
     tor_process = None
-    if i != 1:
-      tor_process = remakeTorWithChangedHops(i)
-      listCircuits()
+    websites_stats_list.append([])
+    # if i != 1:
+    #   tor_process = remakeTorWithChangedHops(i)
+    #   listCircuits()
     for website in websites_list:
-      if i == 1:
-        calculatePerfWebsite(website)
+      if i != 0:
+        website_stats = calculatePerfWebsite(website)
+        websites_stats_list[i-1].append(website_stats)
         continue
-      calculatePerfWebsite(website, True)
-    if i != 1:
-      tor_process.send_signal(signal.SIGINT)
+      website_stats = calculatePerfWebsite(website, True)
+      websites_stats_list[i-1].append(website_stats)
+    # if i != 1:
+    #   tor_process.send_signal(signal.SIGINT)
+  # Process and plot the collected websites stats
+  percent_increases = []
+  columnsArr = [BACKEND_PERF_CONST, FRONTEND_PERF_CONST, RESPONSE_PERF_CONST]
+  stats_arr = [MEAN_STR, MEADIAN_STR]
+  for i in range(len(websites_list)):
+    percent_increases.append({})
+    for col in columnsArr:
+      percent_increases[i][col] = {}
+      for stat in stats_arr:
+        percent_increases[i][col][stat] = []
+  for i in range(len(websites_list)):
+    base = websites_stats_list[0][i]
+    for num_hops in range(1, MAX_NUM_HOPS):
+      next = websites_stats_list[num_hops][i]
+      for col in columnsArr:
+        for stat in stats_arr:
+          inc_percent = (next[col][stat] - base[col][stat]) * 100 / base[col][stat]
+          percent_increases[i][col][stat].append(inc_percent)
+      # base = next
+  x_axis = [0]
+  for i in range(2, MAX_NUM_HOPS + 1):
+    x_axis.append(i)
+  proc_percent_increases = {}
+  for col in columnsArr:
+    proc_percent_increases[col] = {}
+    fig, ax = plt.subplots()
+    for stat in stats_arr:
+      for i in range(len(percent_increases[0][col][stat])):
+        proc_percent_increases[col][stat] = [0]
+        sum = 0
+        for j in range(len(percent_increases)):
+          sum += percent_increases[j][col][stat][i]
+        avg = sum / len(percent_increases)
+        proc_percent_increases[col][stat].append(avg)
+      ax.plot(x_axis, proc_percent_increases[col][stat], marker='o', markersize=4, label=stat + ' ' + col + ' Time')
+    ax.set_ylabel('Time Increase %')
+    ax.set_xlabel('Circuit Length')
+    ax.set_title('Website ' + col + ' Times')
+    ax.legend()
+    plt.savefig(col + 'Time.png')
+
 
 if __name__ == "__main__":
   main()
