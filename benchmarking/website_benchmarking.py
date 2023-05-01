@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 # benchmarking/popular_websites.txt contains the list of the top 50 popular
 # websites(excluding adult websites).
 
-ITERATIONS_PER_WEBPAGE = 2
+ITERATIONS_PER_WEBPAGE = 100
 website = "http://google.com"
 timings = defaultdict(list)
 WEBSITES_FILE_NAME = "popular_websites.txt"
@@ -54,7 +54,7 @@ MEADIAN_STR = "Median"
 STD_DEV_STR = "Standard Deviation"
 COF_VAR_STR = "Coefficient of Variation"
 DATA_DOWNLOADED_STR = "data_downloaded"
-MAX_NUM_HOPS = 2
+MAX_NUM_HOPS = 8
 SOCKS_PORT = 9200
 CONTROL_PORT = 9201
 
@@ -258,7 +258,7 @@ def remakeTorWithChangedHops(num_hops):
   subprocess.run("sudo make install", cwd="/users/ys5608/code/tor/", shell=True)
   print("Starting tor with hops=" + str(num_hops))
   tor_process = subprocess.Popen("exec tor --controlport 9201", cwd="/users/ys5608/code/tor/", shell=True)
-  time.sleep(20)
+  time.sleep(30)
   return tor_process
 
 def listCircuits():
@@ -288,18 +288,18 @@ def main():
   for i in range(1, MAX_NUM_HOPS + 1):
     tor_process = None
     websites_stats_list.append([])
-    # if i != 1:
-    #   tor_process = remakeTorWithChangedHops(i)
-    #   listCircuits()
+    if i != 1:
+      tor_process = remakeTorWithChangedHops(i)
+      listCircuits()
     for website in websites_list:
-      if i != 0:
+      if i == 1:
         website_stats = calculatePerfWebsite(website)
         websites_stats_list[i-1].append(website_stats)
         continue
       website_stats = calculatePerfWebsite(website, True)
       websites_stats_list[i-1].append(website_stats)
-    # if i != 1:
-    #   tor_process.send_signal(signal.SIGINT)
+    if i != 1:
+      tor_process.send_signal(signal.SIGINT)
   # Process and plot the collected websites stats
   percent_increases = []
   columnsArr = [BACKEND_PERF_CONST, FRONTEND_PERF_CONST, RESPONSE_PERF_CONST]
@@ -327,8 +327,8 @@ def main():
     proc_percent_increases[col] = {}
     fig, ax = plt.subplots()
     for stat in stats_arr:
+      proc_percent_increases[col][stat] = [0]
       for i in range(len(percent_increases[0][col][stat])):
-        proc_percent_increases[col][stat] = [0]
         sum = 0
         for j in range(len(percent_increases)):
           sum += percent_increases[j][col][stat][i]
