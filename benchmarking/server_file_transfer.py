@@ -1,6 +1,6 @@
 import socket
-import socks
-import http.client
+# import socks
+# import http.client
 import string
 import random
 import time
@@ -8,9 +8,9 @@ import statistics
 import subprocess
 import os
 import signal
-from stem import Signal, CircStatus
-from stem.control import Controller, EventType
-import matplotlib.pyplot as plt
+# from stem import Signal, CircStatus
+# from stem.control import Controller, EventType
+# import matplotlib.pyplot as plt
 
 # IS_SERVER = True
 IS_SERVER = False
@@ -20,8 +20,8 @@ RECV_SERVER_PORT_NO = 12347
 FILE_NAME = 'random_text.txt'
 RECV_FILE_NAME = 'recv_random_text.txt'
 FILE_SIZE = 1024 * 1024 * 100 # 100MB
-NUM_TIMES = 10
-NUM_TIMES_LATENCY = 1000
+NUM_TIMES = 1
+# NUM_TIMES_LATENCY = 20
 TOR_PORT = 9200
 SOCKS_PORT = 9200
 CONTROL_PORT = 9201
@@ -33,7 +33,6 @@ COF_VAR_STR = "Coefficient of Variation"
 IP_ADR = 'linserv1.cims.nyu.edu'
 NUM_IGNORE_INITIAL = 5
 NUM_IGNORE_INITIAL_THROUGHPUT = 0
-NUM_INITIAL_THROUGHPUT = 20
 
 def server():
   # socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 9050, True)
@@ -176,15 +175,12 @@ def clientLatency():
   print(latency)
   return latency
 
-def measureThroughput(send_file = False, use_tor = False, is_initial = False):
+def measureThroughput(send_file = False, use_tor = False):
   if use_tor:
     socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", SOCKS_PORT, True)
     socket.socket = socks.socksocket
   throughputs = []
-  num = NUM_TIMES
-  if is_initial:
-    num = NUM_INITIAL_THROUGHPUT
-  for i in range(num):
+  for i in range(NUM_TIMES):
     if i < NUM_IGNORE_INITIAL_THROUGHPUT:
       continue
     if not send_file:
@@ -199,7 +195,7 @@ def measureThroughput(send_file = False, use_tor = False, is_initial = False):
   median_throughput = statistics.median(throughputs)
   std_dev_throughput = statistics.stdev(throughputs)
   coef_var = std_dev_throughput * 100 / mean_throughput
-  print("Num times %s" % num)
+  print("Num times %s" % NUM_TIMES)
   print("Mean %s" % mean_throughput)
   print("Median %s" % median_throughput)
   print("Std Dev %s" % std_dev_throughput)
@@ -216,7 +212,7 @@ def measureLatency(use_tor = False):
     socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", SOCKS_PORT, True)
     socket.socket = socks.socksocket
   latencies = []
-  for i in range(NUM_TIMES_LATENCY):
+  for i in range(NUM_TIMES):
     if i < NUM_IGNORE_INITIAL:
       continue
     latencies.append(clientLatency())
@@ -228,7 +224,7 @@ def measureLatency(use_tor = False):
   median_latency = statistics.median(latencies)
   std_dev_latency = statistics.stdev(latencies)
   coef_var = std_dev_latency * 100 / mean_latency
-  print("Num times %s" % NUM_TIMES_LATENCY)
+  print("Num times %s" % NUM_TIMES)
   print("Mean %s" % mean_latency)
   print("Median %s" % median_latency)
   print("Std Dev %s" % std_dev_latency)
@@ -323,7 +319,7 @@ def measureThroughputOverHops(send_file = False):
       listCircuits()
     if i == 1:
       # Normal without tor proxy
-      stats = measureThroughput(send_file, False)
+      stats = measureThroughput(send_file)
       throughputs_stats.append(stats)
       continue
     # With tor proxy
@@ -358,10 +354,10 @@ def main():
   print("Type 4 to start a client for measuring latency")
   print("Type 5 to start a server which will receive a file")
   print("Type 6 to start a client which will send the file to the corresponding server")
-  # choice = input()
-  # choice = int(choice)
-  createRandomFile(RECV_FILE_NAME, FILE_SIZE)
-  choice = 6
+  choice = input()
+  choice = int(choice)
+  # createRandomFile(RECV_FILE_NAME, FILE_SIZE)
+  # choice = 6
   if choice == 1:
     server()
   elif choice == 2:
@@ -373,7 +369,7 @@ def main():
   elif choice == 5:
     serverReceive()
   elif choice == 6:
-    measureThroughputOverHops(True)
+    clientSendThroughput()
 
 
 
