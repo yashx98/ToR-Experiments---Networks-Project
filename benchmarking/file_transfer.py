@@ -20,12 +20,12 @@ RECV_SERVER_PORT_NO = 12347
 FILE_NAME = 'random_text.txt'
 RECV_FILE_NAME = 'recv_random_text.txt'
 FILE_SIZE = 1024 * 1024 * 100 # 100MB
-NUM_TIMES = 10
-NUM_TIMES_LATENCY = 1000
+NUM_TIMES = 20
+NUM_TIMES_LATENCY = 100
 TOR_PORT = 9200
 SOCKS_PORT = 9200
 CONTROL_PORT = 9201
-MAX_NUM_HOPS = 6
+MAX_NUM_HOPS = 10
 MEAN_STR = "Mean"
 MEADIAN_STR = "Median"
 STD_DEV_STR = "Standard Deviation"
@@ -184,13 +184,20 @@ def measureThroughput(send_file = False, use_tor = False, is_initial = False):
   num = NUM_TIMES
   if is_initial:
     num = NUM_INITIAL_THROUGHPUT
-  for i in range(num):
+  i = 0
+  # for i in range(num):
+  while i < num:
     if i < NUM_IGNORE_INITIAL_THROUGHPUT:
       continue
-    if not send_file:
-      throughputs.append(clientThroughput())
-    else:
-      throughputs.append(clientSendThroughput())
+    try:
+      if not send_file:
+        throughputs.append(clientThroughput())
+      else:
+        throughputs.append(clientSendThroughput())
+    except Exception as e:
+      print("Exception occured while calculating throughput: " + str(e))
+      i -= 1
+    i += 1
   if use_tor:
     socks.set_default_proxy(None)
     socket.socket = socks.socksocket
@@ -216,10 +223,17 @@ def measureLatency(use_tor = False):
     socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", SOCKS_PORT, True)
     socket.socket = socks.socksocket
   latencies = []
-  for i in range(NUM_TIMES_LATENCY):
+  i = 0
+  # for i in range(NUM_TIMES_LATENCY):
+  while i < NUM_TIMES_LATENCY:
     if i < NUM_IGNORE_INITIAL:
       continue
-    latencies.append(clientLatency())
+    try:
+      latencies.append(clientLatency())
+    except Exception as e:
+      print("Exception occured while calculating latency: " + str(e))
+      continue
+    i += 1
   if use_tor:
     socks.set_default_proxy(None)
     socket.socket = socks.socksocket
@@ -344,7 +358,7 @@ def measureThroughputOverHops(send_file = False):
     ax.plot(x_axis, y_axis, marker='o', markersize=4, label=stat + ' Throughput')
   ax.set_xlabel('Circuit Length')
   ax.set_ylabel('Throughput (MBps)')
-  ax.set_title('Circuit Latencies')
+  ax.set_title('Circuit Throughputs')
   ax.legend()
   plt.savefig('Throughput.png')
   return throughputs_stats
@@ -360,6 +374,8 @@ def main():
   print("Type 6 to start a client which will send the file to the corresponding server")
   # choice = input()
   # choice = int(choice)
+  # subprocess.run("tor --version", shell=True)
+  # tor_process = subprocess.Popen("exec tor --controlport 9201", cwd="/users/ys5608/code/tor/", shell=True)
   createRandomFile(RECV_FILE_NAME, FILE_SIZE)
   choice = 6
   if choice == 1:
