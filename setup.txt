@@ -2,6 +2,7 @@
 2. sudo apt install tor
 3. In /etc/tor/torrc, add line SocksPort 9200
 4. sudo apt install python3-pip
+sudo apt install tor-geoipdb
 5. pip install stem
 6. git clone https://gitlab.torproject.org/tpo/core/tor.git
 7. Change hops by changing DEFAULT_ROUTE_LEN in file src/core/or/or.h
@@ -12,6 +13,20 @@
   2. ./configure
   3. make
   4. make install
+9. cd /usr/local/etc/tor/
+10. sudo cp torrc.sample torrc
+11. add line SocksPort 9200
+12. add line ControlPort 9201
+13. run tor --controlport 9201
+14. pip install selenium
+15. pip install prettytable
+pip install matplotlib
+16. Install google chrome:
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo add-apt-repository "deb http://dl.google.com/linux/chrome/deb/ stable main"
+sudo apt update
+sudo apt install google-chrome-stable
 9. To login in the control plane:
   telnet localhost 9201, then authenticate
-10.
+10. setconf __DisablePredictedCircuits=1 to prevent auto creation of new circuits
+11. 
