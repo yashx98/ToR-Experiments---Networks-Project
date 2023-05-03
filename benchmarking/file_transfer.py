@@ -20,7 +20,7 @@ RECV_SERVER_PORT_NO = 12347
 FILE_NAME = 'random_text.txt'
 RECV_FILE_NAME = 'recv_random_text.txt'
 FILE_SIZE = 1024 * 1024 * 100 # 100MB
-NUM_TIMES = 20
+NUM_TIMES = 10
 NUM_TIMES_LATENCY = 100
 TOR_PORT = 9200
 SOCKS_PORT = 9200
@@ -31,7 +31,7 @@ MEADIAN_STR = "Median"
 STD_DEV_STR = "Standard Deviation"
 COF_VAR_STR = "Coefficient of Variation"
 IP_ADR = 'linserv1.cims.nyu.edu'
-NUM_IGNORE_INITIAL = 5
+NUM_IGNORE_INITIAL = 0
 NUM_IGNORE_INITIAL_THROUGHPUT = 0
 NUM_INITIAL_THROUGHPUT = 20
 
@@ -188,6 +188,7 @@ def measureThroughput(send_file = False, use_tor = False, is_initial = False):
   # for i in range(num):
   while i < num:
     if i < NUM_IGNORE_INITIAL_THROUGHPUT:
+      i += 1
       continue
     try:
       if not send_file:
@@ -227,6 +228,7 @@ def measureLatency(use_tor = False):
   # for i in range(NUM_TIMES_LATENCY):
   while i < NUM_TIMES_LATENCY:
     if i < NUM_IGNORE_INITIAL:
+      i += 1
       continue
     try:
       latencies.append(clientLatency())
@@ -322,7 +324,7 @@ def measureLatencyOverHops():
     ax.plot(x_axis, y_axis, marker='o', markersize=4, label=stat + ' Latency Time')
   ax.set_xlabel('Circuit Length')
   ax.set_ylabel('Time (ms)')
-  ax.set_title('Circuit Latencies')
+  ax.set_title('Latencies')
   ax.legend()
   plt.savefig('LatenciesTime.png')
   return latencies_stats
@@ -376,7 +378,7 @@ def main():
   # choice = int(choice)
   # subprocess.run("tor --version", shell=True)
   # tor_process = subprocess.Popen("exec tor --controlport 9201", cwd="/users/ys5608/code/tor/", shell=True)
-  createRandomFile(RECV_FILE_NAME, FILE_SIZE)
+  # createRandomFile(RECV_FILE_NAME, FILE_SIZE)
   choice = 6
   if choice == 1:
     server()
