@@ -11,6 +11,13 @@ import signal
 from stem import Signal, CircStatus
 from stem.control import Controller, EventType
 import matplotlib.pyplot as plt
+from stem import Signal, CircStatus
+import stem.descriptor.remote
+import stem.process
+from stem.control import Controller, EventType
+from stem.util import str_tools
+from stem.descriptor.remote import DescriptorDownloader
+from stem import Flag
 
 # IS_SERVER = True
 IS_SERVER = False
@@ -21,11 +28,11 @@ FILE_NAME = 'random_text.txt'
 RECV_FILE_NAME = 'recv_random_text.txt'
 FILE_SIZE = 1024 * 1024 * 100 # 100MB
 NUM_TIMES = 10
-NUM_TIMES_LATENCY = 100
+NUM_TIMES_LATENCY = 2000
 TOR_PORT = 9200
 SOCKS_PORT = 9200
 CONTROL_PORT = 9201
-MAX_NUM_HOPS = 10
+MAX_NUM_HOPS = 8
 MEAN_STR = "Mean"
 MEADIAN_STR = "Median"
 STD_DEV_STR = "Standard Deviation"
@@ -34,6 +41,7 @@ IP_ADR = 'linserv1.cims.nyu.edu'
 NUM_IGNORE_INITIAL = 0
 NUM_IGNORE_INITIAL_THROUGHPUT = 0
 NUM_INITIAL_THROUGHPUT = 20
+NUM_REFRESH_CIRCUITS = 5
 
 def server():
   # socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 9050, True)
@@ -77,8 +85,11 @@ def serverReceive():
     print(address)
     # with client_socket, open(RECV_FILE_NAME, 'wb') as f:
     while True:
-      data = client_socket.recv(1024)
-      if not data:
+      try:
+        data = client_socket.recv(1024)
+        if not data:
+          break
+      except Exception as e:
         break
         # f.write(data)
     # with open(FILE_NAME, 'rb') as f:
@@ -158,6 +169,14 @@ def clientSendThroughput():
   print(throughput)
   return throughput
 
+def clearAllCircuits():
+  controller = stem.control.Controller.from_port(port = CONTROL_PORT)
+  controller.authenticate()
+  for circ in sorted(controller.get_circuits()):
+    if circ.status != CircStatus.BUILT:
+      continue
+    controller.close_circuit(circ.id)
+  time.sleep(10)
 
 def clientLatency():
   # socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 9050, True)
@@ -229,8 +248,11 @@ def measureLatency(use_tor = False):
   while i < NUM_TIMES_LATENCY:
     if i < NUM_IGNORE_INITIAL:
       i += 1
+      clientLatency()
       continue
     try:
+      # if use_tor and i % NUM_REFRESH_CIRCUITS == 0:
+      #   clearAllCircuits()
       latencies.append(clientLatency())
     except Exception as e:
       print("Exception occured while calculating latency: " + str(e))
@@ -295,7 +317,7 @@ def listCircuits():
 
 def measureLatencyOverHops():
   latencies_stats = []
-  for i in range(1, MAX_NUM_HOPS + 1):
+  for i in range(2, MAX_NUM_HOPS + 1):
     tor_process = None
     if i != 1:
       tor_process = remakeTorWithChangedHops(i)
@@ -314,12 +336,12 @@ def measureLatencyOverHops():
   print(latencies_stats)
   stats_arr = [MEAN_STR, MEADIAN_STR]
   fig, ax = plt.subplots()
-  x_axis = [0]
+  x_axis = []
   for i in range(2, MAX_NUM_HOPS + 1):
     x_axis.append(i)
   for stat in stats_arr:
     y_axis = []
-    for i in range(MAX_NUM_HOPS):
+    for i in range(MAX_NUM_HOPS-1):
       y_axis.append(latencies_stats[i][stat])
     ax.plot(x_axis, y_axis, marker='o', markersize=4, label=stat + ' Latency Time')
   ax.set_xlabel('Circuit Length')
@@ -332,7 +354,7 @@ def measureLatencyOverHops():
 
 def measureThroughputOverHops(send_file = False):
   throughputs_stats = []
-  for i in range(1, MAX_NUM_HOPS + 1):
+  for i in range(2, MAX_NUM_HOPS + 1):
     tor_process = None
     if i != 1:
       tor_process = remakeTorWithChangedHops(i)
@@ -350,12 +372,12 @@ def measureThroughputOverHops(send_file = False):
   print(throughputs_stats)
   stats_arr = [MEAN_STR, MEADIAN_STR]
   fig, ax = plt.subplots()
-  x_axis = [0]
+  x_axis = []
   for i in range(2, MAX_NUM_HOPS + 1):
     x_axis.append(i)
   for stat in stats_arr:
     y_axis = []
-    for i in range(MAX_NUM_HOPS):
+    for i in range(MAX_NUM_HOPS - 1):
       y_axis.append(throughputs_stats[i][stat])
     ax.plot(x_axis, y_axis, marker='o', markersize=4, label=stat + ' Throughput')
   ax.set_xlabel('Circuit Length')

@@ -466,27 +466,38 @@ def runOverDifferentRegionsManually(countries_list):
   for region in countries_list:
     countriesRegions.append(region)
   fig, ax = plt.subplots()
+  fig2, ax2 = plt.subplots()
   x_axis = []
   for i in range(2, MAX_NUM_HOPS + 1):
     x_axis.append(i)
   y_axis = {}
+  y_axis2 = {}
   for region in countriesRegions:
     y_axis[region] = []
+    y_axis2[region] = []
   for i in range(2, MAX_NUM_HOPS + 1):
     tor_process = setupTorForRun(i)
     for region in countriesRegions:
       torCreateCircuits(countries_list[region])
       stats = measureLatency(True)
       y_axis[region].append(stats[MEAN_STR])
+      y_axis2[region].append(stats[MEADIAN_STR])
     cleanupTorAfterRun(tor_process)
   for region in countriesRegions:
     ax.plot(x_axis, y_axis[region], marker='o', markersize=4, label=region)
+    ax2.plot(x_axis, y_axis2[region], marker='o', markersize=4, label=region)
   ax.set_xlabel('Circuit Length')
+  ax2.set_xlabel('Circuit Length')
   # 
   ax.set_ylabel('Time (ms)')
   ax.set_title('Circuit Latencies in Different Regions')
   ax.legend()
-  plt.savefig('LatenciesRegionTime.png')
+  fig.savefig('MenaLatenciesRegionTime.png')
+  # 
+  ax2.set_ylabel('Time (ms)')
+  ax2.set_title('Circuit Latencies in Different Regions')
+  ax2.legend()
+  fig2.savefig('MedianLatenciesRegionTime.png')
   # 
   # ax.set_ylabel('Throughput (MBps)')
   # ax.set_title('Circuit Throughputs in Different Regions')
@@ -496,8 +507,8 @@ def runOverDifferentRegionsManually(countries_list):
 def main():
   countries_list = {}
   countries_list[NORTH_AMERICA_STR] = ["us", "ca"]
-  countries_list[EUROPE_STR] = ["uk", "fr", "de", "dk", "se"]
-  countries_list[EAST_ASIA_STR] = ["jp", "tw", "kr"]
+  countries_list[EUROPE_STR] = ["uk", "fr", "de", "dk", "se", "no"]
+  countries_list[EAST_ASIA_STR] = ["jp", "tw", "kr", "sg"]
   # runOverDifferentRegions(countries_list)
   # e, m, x = getListOfNodes(["us", "ca"])
   # print(e)

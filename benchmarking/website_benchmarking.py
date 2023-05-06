@@ -54,7 +54,7 @@ MEADIAN_STR = "Median"
 STD_DEV_STR = "Standard Deviation"
 COF_VAR_STR = "Coefficient of Variation"
 DATA_DOWNLOADED_STR = "data_downloaded"
-MAX_NUM_HOPS = 8
+MAX_NUM_HOPS = 10
 SOCKS_PORT = 9200
 CONTROL_PORT = 9201
 
