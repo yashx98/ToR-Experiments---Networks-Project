@@ -2,12 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-CSV_FILE = "websites_3h.csv"
-FIG_FILE = "websites_3h.png"
+HOPS = 2
+CSV_FILE = "websites_" + str(HOPS) + "h.csv"
+FIG_FILE = "websites_" + str(HOPS)+ "h.png"
 
 def readCSVFile():
     column_3_values = []
-    with open(CSV_FILE, mode='r') as csv_file:
+    with open('./csv/' + CSV_FILE, mode='r') as csv_file:
         csv_reader = csv.reader(csv_file)
         next(csv_reader)
         for row in csv_reader:
@@ -28,10 +29,10 @@ def generateCDF():
     plt.xlabel('Total Time / Encryption Time')
     plt.ylabel('CDF')
     
-    plt.title('CDF for Total Time / Encryption Time')
+    plt.title('CDF for Total Time / Encryption Time     (hops = ' + str(HOPS) + ')')
     
     plt.plot(x, y)
-    plt.savefig(FIG_FILE)
+    plt.savefig('./charts/' + FIG_FILE)
     plt.show()
     # plt.savefig('websites_5h.png')
 
